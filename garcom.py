@@ -7,7 +7,8 @@ class Garcom:
         self.clientes = []
 
     def adicionar_cliente(self, cliente: Type[Observador]):
-        self.clientes.append(cliente)
+        if(all(cliente.cpf != c.cpf for c in self.clientes)):
+            self.clientes.append(cliente)
 
     def remover_cliente(self, cliente: Type[Observador]):
         self.clientes.remove(cliente)
