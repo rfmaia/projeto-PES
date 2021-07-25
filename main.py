@@ -1,3 +1,8 @@
+from typing import Optional
+
+from fastapi import FastAPI
+from pydantic import BaseModel
+
 from cliente import Cliente
 from garcom import Garcom
 
@@ -10,6 +15,55 @@ menu = [{"item_id": "0",
          "tipo": "salgado", 
          "preco": 10.0}]
 
+garcom = Garcom()
+
+app = FastAPI()
+
+class ClienteAPI(BaseModel):
+    name: str
+
+@app.get("/cliente/{cpf}")
+def busca_cliente(cpf: str):
+    return {"cliente": [cliente for cliente in garcom.clientes if cliente.cpf == cpf]}
+
+@app.put("/cliente/{cpf}")
+def cadastra_cliente(cpf: str, cliente: ClienteAPI):
+    garcom.adicionar_cliente(Cliente(cliente.name, cpf, menu))
+    return {"cliente": [cliente for cliente in garcom.clientes if cliente.cpf == cpf]}
+
+@app.get("/cliente/{cpf}/menu")
+def cliente_lista_menu(cpf: str):
+    return {"menu": [cliente.listar_menu() for cliente in garcom.clientes if cliente.cpf == cpf]}
+
+@app.get("/cliente/{cpf}/menu/{tipo}")
+def cliente_lista_menu_filtrado(cpf: str, tipo: str):
+    return {"menu": [cliente.filtrar_menu_por_tipo(tipo) for cliente in garcom.clientes if cliente.cpf == cpf]}
+
+@app.put("/cliente/{cpf}/pedido/{idItem}/{quantidade}")
+def cliente_realiza_pedido(cpf: str, idItem: str, quantidade: int):
+    return {"Pedido": [cliente.realizar_pedido(idItem, quantidade) for cliente in garcom.clientes if cliente.cpf == cpf]}
+
+@app.put("/cliente/{cpf}/preco")
+def cliente_solicita_encerramento_da_conta(cpf: str):
+    garcom.notificar_observadores()
+    return {"cpf": cpf , "Total": [cliente.totalConta for cliente in garcom.clientes if cliente.cpf == cpf]}
+
+@app.get("/garcom")
+def garcom_lista_pedidos():
+    return {"Garcom": [(cliente.nome,cliente.pedidos) for cliente in garcom.clientes]}
+
+
+
+
+
+
+
+
+
+
+
+
+'''
 g1 = Garcom() # Inicialização do Garçom 1 (Subject)
 
 c1 = Cliente("João", "123456789", menu) # Inicialização do Cliente 1 (Observer 1)
@@ -46,3 +100,4 @@ print(c2.totalConta)
 g1.notificar_observadores('conta') # Garçom 1 entrega o total da conta para os clientes
 print(c1.totalConta)
 print(c2.totalConta)
+'''

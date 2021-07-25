@@ -12,7 +12,7 @@ class Garcom:
     def remover_cliente(self, cliente: Type[Observador]):
         self.clientes.remove(cliente)
     
-    def notificar_observadores(self, codigo):
+    def notificar_observadores(self):
         for cliente in self.clientes:
-            cliente.update(codigo)
+            cliente.update()
     
