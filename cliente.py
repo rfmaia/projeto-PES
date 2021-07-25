@@ -9,6 +9,12 @@ class Cliente(Observador):
         self.menu = menu
         self.pedidos = []
         self.totalConta = None
+    
+    def __eq__(self, client):
+        if (isinstance(client, Cliente)):
+            return True if self.cpf == client.cpf else False
+        else:
+            return False
 
     def listar_menu(self):
         return self.menu
