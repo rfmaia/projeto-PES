@@ -3,8 +3,8 @@ from typing import Optional
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-from cliente import Cliente
-from garcom import Garcom
+from src.cliente import Cliente
+from src.garcom import Garcom
 
 menu = [{"item_id": "0",
          "nome": "Refrigerante",

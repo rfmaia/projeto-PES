@@ -1,5 +1,5 @@
-from observador import Observador
-from item import Item
+from src.observador import Observador
+from src.item import Item
 
 class Cliente(Observador):
 
